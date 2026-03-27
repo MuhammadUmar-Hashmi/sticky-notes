@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="form-shell">
+  <h2 class="section-title">Note</h2>
+
+  <form class="form-card" method="post" id="note-form">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <div class="form-field">
+        {% if field.name == "content" %}
+          {{ field.errors }}
+          {{ field.label_tag }}
+          {{ field }}
+          <p class="char-counter" id="content-counter" aria-live="polite">
+            <span id="content-char-count">0</span> characters
+          </p>
+        {% else %}
+          {{ field.errors }}
+          {{ field.label_tag }}
+          {{ field }}
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">Save</button>
+      <a class="btn btn-secondary" href="/notes/">Cancel</a>
+    </div>
+  </form>
+</section>
+<script src="{% static 'notes/note_form.js' %}"></script>
+{% endblock %}

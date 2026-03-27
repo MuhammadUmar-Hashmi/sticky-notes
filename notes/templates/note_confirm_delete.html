@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="form-shell">
+  <h2 class="section-title">Delete Note?</h2>
+  <div class="form-card">
+    <p>Are you sure you want to delete "<strong>{{ note.title }}</strong>"?</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-actions">
+        <button class="btn btn-danger" type="submit">Yes, Delete</button>
+        <a class="btn btn-secondary" href="/notes/">Cancel</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+{% endblock %}

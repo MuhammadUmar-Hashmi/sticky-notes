@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="search-strip">
+  <form method="get" class="search-form">
+    <input type="text" name="q" placeholder="Search notes..." value="{{ query }}" />
+    <button class="search-circle" type="submit" aria-label="Search">⌕</button>
+  </form>
+</section>
+
+<div class="page-header">
+  <h2 class="section-title">My Notes</h2>
+  <a class="btn btn-primary" href="/notes/new/">+ New Note</a>
+</div>
+
+<div class="notes-grid">
+  {% for note in notes %}
+    <article class="note-card" style="--note-bg: {{ note.color }};">
+      <div class="note-head">
+        <div class="note-head-left">
+          <details class="menu">
+            <summary class="menu-trigger" aria-label="Note options">⋯</summary>
+            <div class="menu-list">
+              <a href="/notes/{{ note.id }}/edit/">Edit</a>
+              <form method="post" action="/notes/{{ note.id }}/toggle-pin/">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                <button type="submit">{% if note.pinned %}Unpin{% else %}Pin{% endif %}</button>
+              </form>
+              <div class="menu-colors">
+                <form method="post" action="/notes/{{ note.id }}/set-color/">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                  <input type="hidden" name="color" value="#FFD166" />
+                  <button class="swatch swatch-yellow" type="submit" aria-label="Set yellow"></button>
+                </form>
+                <form method="post" action="/notes/{{ note.id }}/set-color/">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                  <input type="hidden" name="color" value="#CDEAC0" />
+                  <button class="swatch swatch-green" type="submit" aria-label="Set green"></button>
+                </form>
+                <form method="post" action="/notes/{{ note.id }}/set-color/">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                  <input type="hidden" name="color" value="#A0C4FF" />
+                  <button class="swatch swatch-blue" type="submit" aria-label="Set blue"></button>
+                </form>
+                <form method="post" action="/notes/{{ note.id }}/set-color/">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                  <input type="hidden" name="color" value="#FFADAD" />
+                  <button class="swatch swatch-red" type="submit" aria-label="Set red"></button>
+                </form>
+              </div>
+              <form method="post" action="/notes/{{ note.id }}/delete/">
+                {% csrf_token %}
+                <button class="menu-danger" type="submit">Delete</button>
+              </form>
+            </div>
+          </details>
+          <div>
+            <h3 class="note-title">{{ note.title }}</h3>
+            <p class="note-subtitle">Sticky note</p>
+          </div>
+        </div>
+        <span class="check-mark" aria-label="{% if note.pinned %}Pinned{% else %}Not pinned{% endif %}">{% if note.pinned %}☑{% else %}☐{% endif %}</span>
+      </div>
+      <p class="note-meta">Added: {{ note.created_at|date:"M d, Y, h:i A" }}</p>
+      <p class="note-meta">Edited: {{ note.updated_at|date:"M d, Y, h:i A" }}</p>
+      <hr class="note-sep" />
+      <p class="note-content">{{ note.content|truncatechars:180 }}</p>
+      <div class="note-actions">
+        <a class="btn btn-secondary btn-open" href="/notes/{{ note.id }}/edit/">Open</a>
+      </div>
+    </article>
+  {% empty %}
+    <div class="empty-state">
+      <p>No notes yet. Create your first sticky note to get started.</p>
+    </div>
+  {% endfor %}
+</div>
+
+{% if notes.has_other_pages %}
+  <div class="pagination">
+    {% if notes.has_previous %}
+      <a class="btn btn-secondary" href="?page={{ notes.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Previous</a>
+    {% endif %}
+
+    <span class="page-chip">Page {{ notes.number }} of {{ notes.paginator.num_pages }}</span>
+
+    {% if notes.has_next %}
+      <a class="btn btn-secondary" href="?page={{ notes.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

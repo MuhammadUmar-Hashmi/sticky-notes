@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sticky Notes</title>
+    <link rel="stylesheet" href="{% static 'notes/styles.css' %}" />
+  </head>
+  <body>
+    <header class="navbar">
+      <nav class="container navbar-inner">
+        <a class="brand" href="/notes/">Sticky Notes</a>
+        <div class="header-clip" aria-hidden="true">
+          <div class="clip-paper">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+        <div class="nav-links">
+          <a class="btn btn-nav" href="/notes/">Notes</a>
+          {% if user.is_authenticated %}
+            <form method="post" action="/logout/" class="inline-form">
+              {% csrf_token %}
+              <button class="btn btn-nav" type="submit">Logout</button>
+            </form>
+          {% else %}
+            <a class="btn btn-nav" href="/login/">Login</a>
+            <a class="btn btn-nav btn-nav-strong" href="/register/">Register</a>
+          {% endif %}
+        </div>
+      </nav>
+    </header>
+
+    <main class="page">
+      <section class="container">
+        {% block content %}{% endblock %}
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">Made by Umar Interactive — Muhammad Umar (22P-9300)</div>
+    </footer>
+  </body>
+</html>
+

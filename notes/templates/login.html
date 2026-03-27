@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="form-shell">
+  <h2 class="section-title">Login</h2>
+
+  <form class="form-card" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">Login</button>
+      <a class="btn btn-secondary" href="/register/">Create Account</a>
+    </div>
+  </form>
+</section>
+{% endblock %}
